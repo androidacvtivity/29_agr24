@@ -1,0 +1,40 @@
+SELECT
+    LEFT(
+        CASE
+            WHEN TRIM(ftc.field_t_code_value) REGEXP '^[135]'
+                 AND CHAR_LENGTH(TRIM(ftc.field_t_code_value)) = 6
+            THEN CONCAT('0', TRIM(ftc.field_t_code_value))
+            ELSE TRIM(ftc.field_t_code_value)
+        END,
+        7
+    ) AS code,
+
+    CONCAT(
+        LEFT(
+            CASE
+                WHEN TRIM(ftc.field_t_code_value) REGEXP '^[135]'
+                     AND CHAR_LENGTH(TRIM(ftc.field_t_code_value)) = 6
+                THEN CONCAT('0', TRIM(ftc.field_t_code_value))
+                ELSE TRIM(ftc.field_t_code_value)
+            END,
+            7
+        ),
+        ' - ',
+        t.name
+    ) AS label
+
+FROM taxonomy_term_field_data t
+
+JOIN taxonomy_term__field_t_code ftc
+    ON ftc.entity_id = t.tid
+
+JOIN taxonomy_term__field_t_prgs ftp
+    ON ftp.entity_id = t.tid
+
+WHERE
+    t.vid = 'cuatm_full'
+    AND t.langcode = 'ro'
+    AND t.status = 1
+    AND ftp.field_t_prgs_value IN ('2')
+    AND ftc.field_t_code_value NOT IN ('0000000','1111111','2222222','3333333');
+ 

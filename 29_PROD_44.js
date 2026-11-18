@@ -34,7 +34,7 @@ function watchAutoSum_CAP7_R8500_C1() {
             return 0;
         }
 
-        // AcceptДѓ И™i вЂћ,вЂќ И™i вЂћ.вЂќ
+        // Acceptă și „,” și „.”
         const normalized = String(raw).replace(',', '.');
         const val = parseFloat(normalized);
         return isNaN(val) ? 0 : val;
@@ -55,26 +55,26 @@ function watchAutoSum_CAP7_R8500_C1() {
         }
     }
 
-    // SetДѓm cГўmpurile de total (R8500, C1вЂ“C8) ca doar citire + stil doar pe numДѓr
+    // Setăm câmpurile de total (R8500, C1–C8) ca doar citire + stil doar pe număr
     cols.forEach(function (col) {
         const targetID = '#CAP7_R8500_' + col;
 
         jQuery(targetID).prop('readonly', true);
 
         jQuery(targetID).css({
-            'background-color': '#ebe9e6', // doar input-ul, nu toatДѓ celula
+            'background-color': '#ebe9e6', // doar input-ul, nu toată celula
             'color': '#0000cc',
             'border': 'none',
             'text-align': 'right'
         });
 
-        // calcul iniИ›ial (dacДѓ sunt valori din DB)
+        // calcul inițial (dacă sunt valori din DB)
         updateSumForCol(col);
     });
 
     const events = 'input change keyup blur';
 
-    // LegДѓm evenimente pe toate celulele sursДѓ (8510, 8520, 8530, 8540) pentru toate coloanele
+    // Legăm evenimente pe toate celulele sursă (8510, 8520, 8530, 8540) pentru toate coloanele
     rows.forEach(function (row) {
         cols.forEach(function (col) {
             const selector = '#CAP7_R' + row + '_' + col;
@@ -86,13 +86,13 @@ function watchAutoSum_CAP7_R8500_C1() {
 }
 
 
-// Autosuma CAP VII FILIAL: R8510 + R8520 + R8530 + R8540 = R8500 (col.1-8, pe fiecare filialДѓ)
+// Autosuma CAP VII FILIAL: R8510 + R8520 + R8530 + R8540 = R8500 (col.1-8, pe fiecare filială)
 function watchAutoSum_CAP7_R8500_C1_FILIAL() {
     const rows = ['8510', '8520', '8530', '8540'];
     const cols = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8'];
     const events = 'input change keyup blur';
 
-    // helper: conversie string -> float (acceptДѓ И™i virgulДѓ)
+    // helper: conversie string -> float (acceptă și virgulă)
     function toFloat(val) {
         if (val === undefined || val === null || val === '') {
             return 0;
@@ -102,9 +102,9 @@ function watchAutoSum_CAP7_R8500_C1_FILIAL() {
         return isNaN(num) ? 0 : num;
     }
 
-    // RecalculeazДѓ o coloanДѓ (C1..C8) pentru TOATE filialele
+    // Recalculează o coloană (C1..C8) pentru TOATE filialele
     function recalcColumn(col) {
-        // toate cГўmpurile 8500_col_FILIAL (unul pe filialДѓ)
+        // toate câmpurile 8500_col_FILIAL (unul pe filială)
         const $targets = jQuery("input[name^='CAP7_R8500_" + col + "_FILIAL']");
         if ($targets.length === 0) {
             return;
@@ -113,7 +113,7 @@ function watchAutoSum_CAP7_R8500_C1_FILIAL() {
         $targets.each(function (index) {
             let total = 0;
 
-            // pentru aceeaИ™i filialДѓ (index), adunДѓm 8510,8520,8530,8540
+            // pentru aceeași filială (index), adunăm 8510,8520,8530,8540
             rows.forEach(function (row) {
                 const $srcList = jQuery("input[name^='CAP7_R" + row + "_" + col + "_FILIAL']");
                 if ($srcList.length > index) {
@@ -130,7 +130,7 @@ function watchAutoSum_CAP7_R8500_C1_FILIAL() {
         });
     }
 
-    // iniИ›ial: setДѓm readonly + culoare И™i calculДѓm toate coloanele
+    // inițial: setăm readonly + culoare și calculăm toate coloanele
     cols.forEach(function (col) {
         const $targets = jQuery("input[name^='CAP7_R8500_" + col + "_FILIAL']");
         if ($targets.length === 0) {
@@ -140,19 +140,19 @@ function watchAutoSum_CAP7_R8500_C1_FILIAL() {
         $targets.each(function () {
             jQuery(this).prop('readonly', true);
             jQuery(this).css({
-                'background-color': '#ebe9e6', // doar input-ul (numДѓrul)
+                'background-color': '#ebe9e6', // doar input-ul (numărul)
                 'color': '#0000cc',
                 'border': 'none',
                 'text-align': 'right'
             });
         });
 
-        // calcul iniИ›ial (dacДѓ avem valori din DB)
+        // calcul inițial (dacă avem valori din DB)
         recalcColumn(col);
     });
 
-    // la orice modificare Г®ntr-unul din 8510вЂ“8540 (pe oricare coloanДѓ),
-    // recalculez coloana respectivДѓ pentru TOATE filialele
+    // la orice modificare într-unul din 8510–8540 (pe oricare coloană),
+    // recalculez coloana respectivă pentru TOATE filialele
     rows.forEach(function (row) {
         cols.forEach(function (col) {
             const selector = "input[name^='CAP7_R" + row + "_" + col + "_FILIAL']";
@@ -165,7 +165,7 @@ function watchAutoSum_CAP7_R8500_C1_FILIAL() {
 
 
 //----------------------------------------------------------
-// Validare CAP7: R8500 C1вЂ“C8 = R8510+R8520+R8530+R8540 (pe fiecare coloanДѓ)
+// Validare CAP7: R8500 C1–C8 = R8510+R8520+R8530+R8540 (pe fiecare coloană)
 function validate_CAP7_R8500_C1(values) {
     var rows = [8510, 8520, 8530, 8540];
 
@@ -192,7 +192,7 @@ function validate_CAP7_R8500_C1(values) {
                 fieldName: r8500Key,
                 weight: 10,
                 msg: Drupal.t(
-                    'Cod eroare: CAP7-001. RГўnd.8500 col.@col trebuie sДѓ fie egalДѓ cu suma rГўndurilor 8510, 8520, 8530, 8540 col.@col. Valoarea rГўndului 8500: @v8500, suma calculatДѓ: @sum',
+                    'Cod eroare: CAP7-001. Rând.8500 col.@col trebuie să fie egală cu suma rândurilor 8510, 8520, 8530, 8540 col.@col. Valoarea rândului 8500: @v8500, suma calculată: @sum',
                     {
                         '@col': c,
                         '@v8500': r8500,
@@ -206,7 +206,7 @@ function validate_CAP7_R8500_C1(values) {
 
 
 //----------------------------------------------------------
-// Validare CAP7 FILIAL: R8500 C1вЂ“C8 = R8510+R8520+R8530+R8540 C1вЂ“C8 (pe fiecare filialДѓ)
+// Validare CAP7 FILIAL: R8500 C1–C8 = R8510+R8520+R8530+R8540 C1–C8 (pe fiecare filială)
 function validate_CAP7_R8500_C1_F(values) {
     var rows = [8510, 8520, 8530, 8540];
 
@@ -243,7 +243,7 @@ function validate_CAP7_R8500_C1_F(values) {
                     index: j,
                     weight: 10,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP7-001-F. RГўnd.8500 col.@col (filiale) trebuie sДѓ fie egalДѓ cu suma rГўndurilor 8510, 8520, 8530, 8540 col.@col. Valoarea rГўndului 8500: @v8500, suma calculatДѓ: @sum',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP7-001-F. Rând.8500 col.@col (filiale) trebuie să fie egală cu suma rândurilor 8510, 8520, 8530, 8540 col.@col. Valoarea rândului 8500: @v8500, suma calculată: @sum',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@col': c,
@@ -259,9 +259,9 @@ function validate_CAP7_R8500_C1_F(values) {
 //------------------------------------------------------------------
 
 //----------------------------------------------------------
-// RГўnd.8600 pe toate col. (col.1-8) (autosuma) = suma rГўnd. 8610 + 8620 + 8630 + 8640 + 8650 + 8660 col.1-8
+// Rând.8600 pe toate col. (col.1-8) (autosuma) = suma rând. 8610 + 8620 + 8630 + 8640 + 8650 + 8660 col.1-8
 // Validare CAP7:
-//  R8600 C1вЂ“C8 = R8610 + R8620 + R8630 + R8640 + R8650 + R8660 (pe fiecare coloanДѓ)
+//  R8600 C1–C8 = R8610 + R8620 + R8630 + R8640 + R8650 + R8660 (pe fiecare coloană)
 function validate_CAP7_R8600(values) {
     var rows = [8610, 8620, 8630, 8640, 8650, 8660];
 
@@ -288,7 +288,7 @@ function validate_CAP7_R8600(values) {
                 fieldName: r8600Key,
                 weight: 10,
                 msg: Drupal.t(
-                    'Cod eroare: CAP7-002. RГўnd.8600 col.@col trebuie sДѓ fie egalДѓ cu suma rГўndurilor 8610, 8620, 8630, 8640, 8650, 8660 col.@col. Valoarea rГўndului 8600: @v8600, suma calculatДѓ: @sum',
+                    'Cod eroare: CAP7-002. Rând.8600 col.@col trebuie să fie egală cu suma rândurilor 8610, 8620, 8630, 8640, 8650, 8660 col.@col. Valoarea rândului 8600: @v8600, suma calculată: @sum',
                     {
                         '@col': c,
                         '@v8600': r8600,
@@ -302,7 +302,7 @@ function validate_CAP7_R8600(values) {
 
 //----------------------------------------------------------
 // Validare CAP7 FILIAL:
-//  R8600 C1вЂ“C8 = R8610 + R8620 + R8630 + R8640 + R8650 + R8660 (pe fiecare filialДѓ)
+//  R8600 C1–C8 = R8610 + R8620 + R8630 + R8640 + R8650 + R8660 (pe fiecare filială)
 function validate_CAP7_R8600_F(values) {
     var rows = [8610, 8620, 8630, 8640, 8650, 8660];
 
@@ -319,7 +319,7 @@ function validate_CAP7_R8600_F(values) {
         for (var c = 1; c <= 8; c++) {
             var col = "C" + c;
 
-            // 8600 FILIAL pentru filialДѓ j, col Cx
+            // 8600 FILIAL pentru filială j, col Cx
             var arr8600 = values["CAP7_R8600_" + col + "_FILIAL"];
             var r8600 = (arr8600 && !isNaN(Number(arr8600[j])))
                 ? Number(arr8600[j])
@@ -327,7 +327,7 @@ function validate_CAP7_R8600_F(values) {
 
             var sum = 0;
 
-            // suma 8610+8620+8630+8640+8650+8660 pentru aceeaИ™i filialДѓ j, col Cx
+            // suma 8610+8620+8630+8640+8650+8660 pentru aceeași filială j, col Cx
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 var arr = values["CAP7_R" + row + "_" + col + "_FILIAL"];
@@ -342,7 +342,7 @@ function validate_CAP7_R8600_F(values) {
                     index: j,
                     weight: 10,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP7-002-F. RГўnd.8600 col.@col (filiale) trebuie sДѓ fie egalДѓ cu suma rГўndurilor 8610, 8620, 8630, 8640, 8650, 8660 col.@col. Valoarea rГўndului 8600: @v8600, suma calculatДѓ: @sum',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP7-002-F. Rând.8600 col.@col (filiale) trebuie să fie egală cu suma rândurilor 8610, 8620, 8630, 8640, 8650, 8660 col.@col. Valoarea rândului 8600: @v8600, suma calculată: @sum',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@col': c,
@@ -359,7 +359,7 @@ function validate_CAP7_R8600_F(values) {
 
 // -----------------------------------------------------------
 // 45-014
-// Cap.I, RГўnd.1190: col.3 = col.4
+// Cap.I, Rând.1190: col.3 = col.4
 function validate45_014(values) {
     var c3 = !isNaN(parseFloat(values["CAP1_R1190_C3"])) ? parseFloat(values["CAP1_R1190_C3"]) : 0;
     var c4 = !isNaN(parseFloat(values["CAP1_R1190_C4"])) ? parseFloat(values["CAP1_R1190_C4"]) : 0;
@@ -372,7 +372,7 @@ function validate45_014(values) {
             fieldName: "CAP1_R1190_C3",
             weight: 6,
             msg: Drupal.t(
-                "Cod eroare: 45-014. Cap.I, RГўnd.1190: col.3 (@c3) trebuie sДѓ fie egalДѓ cu col.4 (@c4).",
+                "Cod eroare: 45-014. Cap.I, Rând.1190: col.3 (@c3) trebuie să fie egală cu col.4 (@c4).",
                 { "@c3": c3, "@c4": c4 }
             )
         });
@@ -380,7 +380,7 @@ function validate45_014(values) {
 }
 
 // 45-014-F (FILIALE)
-// Cap.I, RГўnd.1190: col.3 = col.4 (pentru fiecare filialДѓ)
+// Cap.I, Rând.1190: col.3 = col.4 (pentru fiecare filială)
 function validate45_014_F(values) {
     if (!values.CAP_NUM_FILIAL || !values.CAP_CUATM_FILIAL) return;
 
@@ -402,7 +402,7 @@ function validate45_014_F(values) {
                 index: j,
                 weight: 6,
                 msg: Drupal.t(
-                    "Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-014-F. Cap.I, RГўnd.1190: col.3 (@c3) trebuie sДѓ fie egalДѓ cu col.4 (@c4).",
+                    "Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-014-F. Cap.I, Rând.1190: col.3 (@c3) trebuie să fie egală cu col.4 (@c4).",
                     { "@CAP_CUATM_FILIAL": CAP_CUATM_FILIAL, "@c3": c3, "@c4": c4 }
                 )
             });
@@ -413,7 +413,7 @@ function validate45_014_F(values) {
 
 // -----------------------------------------------------------
 // 45-015
-// Cap.I, RГўnd.1191: col.3 = col.4
+// Cap.I, Rând.1191: col.3 = col.4
 function validate45_015(values) {
     var c3 = !isNaN(parseFloat(values["CAP1_R1191_C3"])) ? parseFloat(values["CAP1_R1191_C3"]) : 0;
     var c4 = !isNaN(parseFloat(values["CAP1_R1191_C4"])) ? parseFloat(values["CAP1_R1191_C4"]) : 0;
@@ -426,7 +426,7 @@ function validate45_015(values) {
             fieldName: "CAP1_R1191_C3",
             weight: 6,
             msg: Drupal.t(
-                "Cod eroare: 45-015. Cap.I, RГўnd.1191: col.3 (@c3) trebuie sДѓ fie egalДѓ cu col.4 (@c4).",
+                "Cod eroare: 45-015. Cap.I, Rând.1191: col.3 (@c3) trebuie să fie egală cu col.4 (@c4).",
                 { "@c3": c3, "@c4": c4 }
             )
         });
@@ -434,7 +434,7 @@ function validate45_015(values) {
 }
 
 // 45-015-F (FILIALE)
-// Cap.I, RГўnd.1191: col.3 = col.4 (pentru fiecare filialДѓ)
+// Cap.I, Rând.1191: col.3 = col.4 (pentru fiecare filială)
 function validate45_015_F(values) {
     if (!values.CAP_NUM_FILIAL || !values.CAP_CUATM_FILIAL) return;
 
@@ -456,7 +456,7 @@ function validate45_015_F(values) {
                 index: j,
                 weight: 6,
                 msg: Drupal.t(
-                    "Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-015-F. Cap.I, RГўnd.1191: col.3 (@c3) trebuie sДѓ fie egalДѓ cu col.4 (@c4).",
+                    "Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-015-F. Cap.I, Rând.1191: col.3 (@c3) trebuie să fie egală cu col.4 (@c4).",
                     { "@CAP_CUATM_FILIAL": CAP_CUATM_FILIAL, "@c3": c3, "@c4": c4 }
                 )
             });
@@ -558,8 +558,8 @@ webform.validators.agr29_24 = function (v, allowOverpass) {
 //------------------------------------------
 //----------------------------------------------------------
 // 45-085-F (FILIALE)
-// Pentru fiecare filialДѓ N И™i rГўnd 8500...8660:
-// Cap.VII, col.7 в‰Ґ col.8
+// Pentru fiecare filială N și rând 8500...8660:
+// Cap.VII, col.7 ≥ col.8
 function validate_45_085_F(values) {
 
     function NVAL(value) {
@@ -602,7 +602,7 @@ function validate_45_085_F(values) {
                     index: j,
                     weight: 85,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-085-F. Cap.VII, rГўnd.@r, col.7 (@v7) trebuie sДѓ fie в‰Ґ col.8 (@v8).',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-085-F. Cap.VII, rând.@r, col.7 (@v7) trebuie să fie ≥ col.8 (@v8).',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@r': r,
@@ -618,7 +618,7 @@ function validate_45_085_F(values) {
 
 //----------------------------------------------------------
 // 45-085
-// Cap.VII RГўnd.8500...8660, col.7 в‰Ґ col.8
+// Cap.VII Rând.8500...8660, col.7 ≥ col.8
 function validate_45_085(values) {
 
     function NVAL(value) {
@@ -645,7 +645,7 @@ function validate_45_085(values) {
                 fieldName: keyC7,
                 weight: 85,
                 msg: Drupal.t(
-                    'Cod eroare: 45-085. Cap.VII, rГўnd.@r, col.7 (@v7) trebuie sДѓ fie в‰Ґ col.8 (@v8).',
+                    'Cod eroare: 45-085. Cap.VII, rând.@r, col.7 (@v7) trebuie să fie ≥ col.8 (@v8).',
                     {
                         '@r': r,
                         '@v7': v7,
@@ -659,8 +659,8 @@ function validate_45_085(values) {
 
 //----------------------------------------------------------
 // 45-084-F (FILIALE)
-// Pentru fiecare filialДѓ N И™i rГўnd 8500...8660:
-// Cap.VII, col.5 в‰Ґ col.6
+// Pentru fiecare filială N și rând 8500...8660:
+// Cap.VII, col.5 ≥ col.6
 function validate_45_084_F(values) {
 
     function NVAL(value) {
@@ -703,7 +703,7 @@ function validate_45_084_F(values) {
                     index: j,
                     weight: 84,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-084-F. Cap.VII, rГўnd.@r, col.5 (@v5) trebuie sДѓ fie в‰Ґ col.6 (@v6).',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-084-F. Cap.VII, rând.@r, col.5 (@v5) trebuie să fie ≥ col.6 (@v6).',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@r': r,
@@ -719,7 +719,7 @@ function validate_45_084_F(values) {
 
 //----------------------------------------------------------
 // 45-084
-// Cap.VII RГўnd.8500...8660, col.5 в‰Ґ col.6
+// Cap.VII Rând.8500...8660, col.5 ≥ col.6
 function validate_45_084(values) {
 
     function NVAL(value) {
@@ -746,7 +746,7 @@ function validate_45_084(values) {
                 fieldName: keyC5,
                 weight: 84,
                 msg: Drupal.t(
-                    'Cod eroare: 45-084. Cap.VII, rГўnd.@r, col.5 (@v5) trebuie sДѓ fie в‰Ґ col.6 (@v6).',
+                    'Cod eroare: 45-084. Cap.VII, rând.@r, col.5 (@v5) trebuie să fie ≥ col.6 (@v6).',
                     {
                         '@r': r,
                         '@v5': v5,
@@ -760,7 +760,7 @@ function validate_45_084(values) {
 
 //----------------------------------------------------------
 // 45-083
-// Cap.VII RГўnd.8500...8660, col.3 в‰Ґ col.4
+// Cap.VII Rând.8500...8660, col.3 ≥ col.4
 function validate_45_083(values) {
 
     function NVAL(value) {
@@ -787,7 +787,7 @@ function validate_45_083(values) {
                 fieldName: keyC3,
                 weight: 83,
                 msg: Drupal.t(
-                    'Cod eroare: 45-083. Cap.VII, rГўnd.@r, col.3 (@v3) trebuie sДѓ fie в‰Ґ col.4 (@v4).',
+                    'Cod eroare: 45-083. Cap.VII, rând.@r, col.3 (@v3) trebuie să fie ≥ col.4 (@v4).',
                     {
                         '@r': r,
                         '@v3': v3,
@@ -800,8 +800,8 @@ function validate_45_083(values) {
 }
 //----------------------------------------------------------
 // 45-083-F (FILIALE)
-// Pentru fiecare filialДѓ N И™i rГўnd 8500...8660:
-// Cap.VII, col.3 в‰Ґ col.4
+// Pentru fiecare filială N și rând 8500...8660:
+// Cap.VII, col.3 ≥ col.4
 function validate_45_083_F(values) {
 
     function NVAL(value) {
@@ -844,7 +844,7 @@ function validate_45_083_F(values) {
                     index: j,
                     weight: 83,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-083-F. Cap.VII, rГўnd.@r, col.3 (@v3) trebuie sДѓ fie в‰Ґ col.4 (@v4).',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-083-F. Cap.VII, rând.@r, col.3 (@v3) trebuie să fie ≥ col.4 (@v4).',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@r': r,
@@ -861,8 +861,8 @@ function validate_45_083_F(values) {
 
 //----------------------------------------------------------
 // 45-082-F (FILIALE)
-// Pentru fiecare filialДѓ N И™i pentru fiecare rГўnd 8500...8660:
-// Cap.VII, col.1 в‰Ґ col.2
+// Pentru fiecare filială N și pentru fiecare rând 8500...8660:
+// Cap.VII, col.1 ≥ col.2
 function validate_45_082_F(values) {
 
     function NVAL(value) {
@@ -905,7 +905,7 @@ function validate_45_082_F(values) {
                     index: j,
                     weight: 82,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-082-F. Cap.VII, rГўnd.@r, col.1 (@v1) trebuie sДѓ fie в‰Ґ col.2 (@v2).',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-082-F. Cap.VII, rând.@r, col.1 (@v1) trebuie să fie ≥ col.2 (@v2).',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@r': r,
@@ -921,7 +921,7 @@ function validate_45_082_F(values) {
 
 //----------------------------------------------------------
 // 45-082
-// Cap.VII RГўnd.8500...8660, col.1 в‰Ґ col.2
+// Cap.VII Rând.8500...8660, col.1 ≥ col.2
 function validate_45_082(values) {
 
     function NVAL(value) {
@@ -948,7 +948,7 @@ function validate_45_082(values) {
                 fieldName: keyC1,
                 weight: 82,
                 msg: Drupal.t(
-                    'Cod eroare: 45-082. Cap.VII, rГўnd.@r, col.1 (@v1) trebuie sДѓ fie в‰Ґ col.2 (@v2).',
+                    'Cod eroare: 45-082. Cap.VII, rând.@r, col.1 (@v1) trebuie să fie ≥ col.2 (@v2).',
                     {
                         '@r': r,
                         '@v1': v1,
@@ -966,7 +966,7 @@ function validate_45_082(values) {
 //----------------------------------------------------------
 
 
-// Helper general pentru rotunjire la 1 zecimalДѓ
+// Helper general pentru rotunjire la 1 zecimală
 function round1(value) {
     var n = Number(value);
     if (isNaN(n)) {
@@ -977,9 +977,9 @@ function round1(value) {
 
 //----------------------------------------------------------
 // 45-081-F  (FILIALE)
-// Pentru fiecare filialДѓ N:
-// Cap.I col.1 rГўnd.1620, 1621-1636 в‰Ґ
-//   Cap.VIII rГўnd.8700, 8710-8860 (suma col.1+2+3+4)
+// Pentru fiecare filială N:
+// Cap.I col.1 rând.1620, 1621-1636 ≥
+//   Cap.VIII rând.8700, 8710-8860 (suma col.1+2+3+4)
 function validate_45_081_F(values) {
 
     function NVAL(value) {
@@ -1022,20 +1022,20 @@ function validate_45_081_F(values) {
         for (var i = 0; i < checks.length; i++) {
             var pair = checks[i];
 
-            // stГўnga: CAP I, rГўnd r1, col.1, pentru filialДѓ j
+            // stânga: CAP I, rând r1, col.1, pentru filială j
             var arrLeft = values["CAP1_R" + pair.r1 + "_C1_FILIAL"];
             var leftRaw = (arrLeft && !isNaN(Number(arrLeft[j])))
                 ? Number(arrLeft[j])
                 : 0;
 
-            // dreapta: CAP VIII, rГўnd r8, suma C1+C2+C3+C4 pentru filialДѓ j
+            // dreapta: CAP VIII, rând r8, suma C1+C2+C3+C4 pentru filială j
             var rightRaw =
                 NVAL(values["CAP8_R" + pair.r8 + "_C1_FILIAL"] ? values["CAP8_R" + pair.r8 + "_C1_FILIAL"][j] : 0) +
                 NVAL(values["CAP8_R" + pair.r8 + "_C2_FILIAL"] ? values["CAP8_R" + pair.r8 + "_C2_FILIAL"][j] : 0) +
                 NVAL(values["CAP8_R" + pair.r8 + "_C3_FILIAL"] ? values["CAP8_R" + pair.r8 + "_C3_FILIAL"][j] : 0) +
                 NVAL(values["CAP8_R" + pair.r8 + "_C4_FILIAL"] ? values["CAP8_R" + pair.r8 + "_C4_FILIAL"][j] : 0);
 
-            // rotunjim la 1 zecimalДѓ
+            // rotunjim la 1 zecimală
             var left = round1(leftRaw);
             var right = round1(rightRaw);
 
@@ -1045,7 +1045,7 @@ function validate_45_081_F(values) {
                     index: j,
                     weight: 81,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-081-F. Cap.I, rГўnd.@r1, col.1 (@left) trebuie sДѓ fie в‰Ґ suma Cap.VIII, rГўnd.@r8, col.1+2+3+4 (@right).',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-081-F. Cap.I, rând.@r1, col.1 (@left) trebuie să fie ≥ suma Cap.VIII, rând.@r8, col.1+2+3+4 (@right).',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@r1': pair.r1,
@@ -1061,7 +1061,7 @@ function validate_45_081_F(values) {
 }
 
 //----------------------------------------------------------
-// Helper general pentru rotunjire la 1 zecimalДѓ
+// Helper general pentru rotunjire la 1 zecimală
 function round1(value) {
     var n = Number(value);
     if (isNaN(n)) {
@@ -1072,9 +1072,9 @@ function round1(value) {
 
 //----------------------------------------------------------
 // 45-081-F  (FILIALE)
-// Pentru fiecare filialДѓ N:
-// Cap.I col.1 rГўnd.1620, 1621-1636 в‰Ґ
-//   Cap.VIII rГўnd.8700, 8710-8860 (suma col.1+2+3+4)
+// Pentru fiecare filială N:
+// Cap.I col.1 rând.1620, 1621-1636 ≥
+//   Cap.VIII rând.8700, 8710-8860 (suma col.1+2+3+4)
 function validate_45_081_F(values) {
 
     function NVAL(value) {
@@ -1117,20 +1117,20 @@ function validate_45_081_F(values) {
         for (var i = 0; i < checks.length; i++) {
             var pair = checks[i];
 
-            // stГўnga: CAP I, rГўnd r1, col.1, pentru filialДѓ j
+            // stânga: CAP I, rând r1, col.1, pentru filială j
             var arrLeft = values["CAP1_R" + pair.r1 + "_C1_FILIAL"];
             var leftRaw = (arrLeft && !isNaN(Number(arrLeft[j])))
                 ? Number(arrLeft[j])
                 : 0;
 
-            // dreapta: CAP VIII, rГўnd r8, suma C1+C2+C3+C4 pentru filialДѓ j
+            // dreapta: CAP VIII, rând r8, suma C1+C2+C3+C4 pentru filială j
             var rightRaw =
                 NVAL(values["CAP8_R" + pair.r8 + "_C1_FILIAL"] ? values["CAP8_R" + pair.r8 + "_C1_FILIAL"][j] : 0) +
                 NVAL(values["CAP8_R" + pair.r8 + "_C2_FILIAL"] ? values["CAP8_R" + pair.r8 + "_C2_FILIAL"][j] : 0) +
                 NVAL(values["CAP8_R" + pair.r8 + "_C3_FILIAL"] ? values["CAP8_R" + pair.r8 + "_C3_FILIAL"][j] : 0) +
                 NVAL(values["CAP8_R" + pair.r8 + "_C4_FILIAL"] ? values["CAP8_R" + pair.r8 + "_C4_FILIAL"][j] : 0);
 
-            // rotunjim la 1 zecimalДѓ
+            // rotunjim la 1 zecimală
             var left = round1(leftRaw);
             var right = round1(rightRaw);
 
@@ -1140,7 +1140,7 @@ function validate_45_081_F(values) {
                     index: j,
                     weight: 81,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-081-F. Cap.I, rГўnd.@r1, col.1 (@left) trebuie sДѓ fie в‰Ґ suma Cap.VIII, rГўnd.@r8, col.1+2+3+4 (@right).',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-081-F. Cap.I, rând.@r1, col.1 (@left) trebuie să fie ≥ suma Cap.VIII, rând.@r8, col.1+2+3+4 (@right).',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@r1': pair.r1,
@@ -1157,8 +1157,8 @@ function validate_45_081_F(values) {
 
 //----------------------------------------------------------
 // 45-081
-// Cap.I col.1 rГўnd.1620, 1621-1636 в‰Ґ
-// cap.VIII rГўnd.8700, 8710-8860 (suma col.1+2+3+4)
+// Cap.I col.1 rând.1620, 1621-1636 ≥
+// cap.VIII rând.8700, 8710-8860 (suma col.1+2+3+4)
 function validate_45_081(values) {
 
     function NVAL(value) {
@@ -1166,7 +1166,7 @@ function validate_45_081(values) {
         return isNaN(n) ? 0 : n;
     }
 
-    // perechi CAP I (399) в†” CAP VIII (425)
+    // perechi CAP I (399) ↔ CAP VIII (425)
     var checks = [
         { r1: '1621', r8: '8710' },
         { r1: '1622', r8: '8720' },
@@ -1192,11 +1192,11 @@ function validate_45_081(values) {
     for (var i = 0; i < checks.length; i++) {
         var pair = checks[i];
 
-        // stГўnga: CAP I, rГўnd r1, col.1
+        // stânga: CAP I, rând r1, col.1
         var leftKey = "CAP1_R" + pair.r1 + "_C1";
         var leftRaw = NVAL(values[leftKey]);
 
-        // dreapta: CAP VIII, rГўnd r8, suma C1+C2+C3+C4
+        // dreapta: CAP VIII, rând r8, suma C1+C2+C3+C4
         var base = "CAP8_R" + pair.r8 + "_";
         var rightRaw =
             NVAL(values[base + "C1"]) +
@@ -1204,16 +1204,16 @@ function validate_45_081(values) {
             NVAL(values[base + "C3"]) +
             NVAL(values[base + "C4"]);
 
-        // rotunjim la 1 zecimalДѓ
+        // rotunjim la 1 zecimală
         var left = round1(leftRaw);
         var right = round1(rightRaw);
 
         if (left < right) {
             webform.errors.push({
                 fieldName: leftKey,
-                weight: 81, // sau ce weight folosiИ›i la 45-081
+                weight: 81, // sau ce weight folosiți la 45-081
                 msg: Drupal.t(
-                    'Cod eroare: 45-081. Cap.I, rГўnd.@r1, col.1 (@left) trebuie sДѓ fie в‰Ґ suma Cap.VIII, rГўnd.@r8, col.1+2+3+4 (@right).',
+                    'Cod eroare: 45-081. Cap.I, rând.@r1, col.1 (@left) trebuie să fie ≥ suma Cap.VIII, rând.@r8, col.1+2+3+4 (@right).',
                     {
                         '@r1': pair.r1,
                         '@r8': pair.r8,
@@ -1229,9 +1229,9 @@ function validate_45_081(values) {
 
 //----------------------------------------------------------
 // 45-080-F  (FILIALE)
-// Pentru fiecare filialДѓ N:
-// Cap.II col.1 rГўnd.7100, 7110-7140, 7200-7260
-//  в‰Ґ suma Cap.VII rГўnd.8500, 8510-8540, 8600-8660 (col.1+3+5+7)
+// Pentru fiecare filială N:
+// Cap.II col.1 rând.7100, 7110-7140, 7200-7260
+//  ≥ suma Cap.VII rând.8500, 8510-8540, 8600-8660 (col.1+3+5+7)
 function validate_45_080_F(values) {
 
     function NVAL(value) {
@@ -1269,13 +1269,13 @@ function validate_45_080_F(values) {
         for (var i = 0; i < checks.length; i++) {
             var pair = checks[i];
 
-            // stГўnga: CAP2, rГўnd r2, col.1, pentru filialДѓ j
+            // stânga: CAP2, rând r2, col.1, pentru filială j
             var arrLeft = values["CAP2_R" + pair.r2 + "_C1_FILIAL"];
             var left = (arrLeft && !isNaN(Number(arrLeft[j])))
                 ? Number(arrLeft[j])
                 : 0;
 
-            // dreapta: CAP7, rГўnd r7, suma C1+C3+C5+C7, pentru aceeaИ™i filialДѓ j
+            // dreapta: CAP7, rând r7, suma C1+C3+C5+C7, pentru aceeași filială j
             var right =
                 NVAL(values["CAP7_R" + pair.r7 + "_C1_FILIAL"] ? values["CAP7_R" + pair.r7 + "_C1_FILIAL"][j] : 0) +
                 NVAL(values["CAP7_R" + pair.r7 + "_C3_FILIAL"] ? values["CAP7_R" + pair.r7 + "_C3_FILIAL"][j] : 0) +
@@ -1288,7 +1288,7 @@ function validate_45_080_F(values) {
                     index: j,
                     weight: 80,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-080-F. Cap.II, rГўnd.@r2, col.1 (@left) trebuie sДѓ fie в‰Ґ suma Cap.VII, rГўnd.@r7, col.1+3+5+7 (@right).',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-080-F. Cap.II, rând.@r2, col.1 (@left) trebuie să fie ≥ suma Cap.VII, rând.@r7, col.1+3+5+7 (@right).',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@r2': pair.r2,
@@ -1306,17 +1306,17 @@ function validate_45_080_F(values) {
 
 //----------------------------------------------------------
 // 45-080
-// Cap.II col.1 rГўndurile 7100, 7110-7140, 7200-7260
-//  в‰Ґ suma (Cap.VII rГўndurile 8500, 8510-8540, 8600-8660, col.1+3+5+7)
+// Cap.II col.1 rândurile 7100, 7110-7140, 7200-7260
+//  ≥ suma (Cap.VII rândurile 8500, 8510-8540, 8600-8660, col.1+3+5+7)
 function validate_45_080(values) {
 
-    // Helper NVAL: converteИ™te Г®n numДѓr, altfel 0
+    // Helper NVAL: convertește în număr, altfel 0
     function NVAL(value) {
         var n = Number(value);
         return isNaN(n) ? 0 : n;
     }
 
-    // perechi CAP II (401) в†” CAP VII (424)
+    // perechi CAP II (401) ↔ CAP VII (424)
     var checks = [
         { r2: '7110', r7: '8510' },
         { r2: '7120', r7: '8520' },
@@ -1337,8 +1337,8 @@ function validate_45_080(values) {
     for (var i = 0; i < checks.length; i++) {
         var pair = checks[i];
 
-        var leftKey = "CAP2_R" + pair.r2 + "_C1"; // Cap.II, rГўnd r2, col.1
-        var rightKey = "CAP7_R" + pair.r7 + "_";   // prefix Cap.VII, rГўnd r7
+        var leftKey = "CAP2_R" + pair.r2 + "_C1"; // Cap.II, rând r2, col.1
+        var rightKey = "CAP7_R" + pair.r7 + "_";   // prefix Cap.VII, rând r7
 
         var left = NVAL(values[leftKey]);
 
@@ -1351,9 +1351,9 @@ function validate_45_080(values) {
         if (left < right) {
             webform.errors.push({
                 fieldName: leftKey,
-                weight: 80, // sau altДѓ pondere dupДѓ standardul tДѓu
+                weight: 80, // sau altă pondere după standardul tău
                 msg: Drupal.t(
-                    'Cod eroare: 45-080. Cap.II, rГўnd.@r2, col.1 (@left) trebuie sДѓ fie в‰Ґ suma Cap.VII, rГўnd.@r7, col.1+3+5+7 (@right).',
+                    'Cod eroare: 45-080. Cap.II, rând.@r2, col.1 (@left) trebuie să fie ≥ suma Cap.VII, rând.@r7, col.1+3+5+7 (@right).',
                     {
                         '@r2': pair.r2,
                         '@r7': pair.r7,
@@ -1370,14 +1370,14 @@ function validate_45_080(values) {
 //---------------------------------------------------------------
 
 //----------------------------------------------------------
-// Helper general pentru rotunjire la 1 zecimalДѓ
+// Helper general pentru rotunjire la 1 zecimală
 function round1(num) {
     return Math.round((Number(num) + Number.EPSILON) * 10) / 10;
 }
 
 //----------------------------------------------------------
-// CAP VIII вЂ“ Legume de cГўmp
-// RГўnd.8700 (col.1вЂ“4) = suma rГўndurilor 8710вЂ“8860 (pe fiecare coloanДѓ)
+// CAP VIII – Legume de câmp
+// Rând.8700 (col.1–4) = suma rândurilor 8710–8860 (pe fiecare coloană)
 function validate_CAP8_R8700(values) {
     var rows = [
         8710, 8720, 8730, 8740,
@@ -1404,7 +1404,7 @@ function validate_CAP8_R8700(values) {
             }
         }
 
-        // Rotunjim la 1 zecimalДѓ Г®nainte de comparaИ›ie
+        // Rotunjim la 1 zecimală înainte de comparație
         var r8700Rounded = round1(r8700);
         var sumRounded = round1(sum);
 
@@ -1413,7 +1413,7 @@ function validate_CAP8_R8700(values) {
                 fieldName: r8700Key,
                 weight: 10,
                 msg: Drupal.t(
-                    'Cod eroare: CAP8-001. RГўnd.8700 col.@col trebuie sДѓ fie egalДѓ cu suma rГўndurilor 8710вЂ“8860 col.@col. Valoarea rГўndului 8700: @v8700, suma calculatДѓ: @sum',
+                    'Cod eroare: CAP8-001. Rând.8700 col.@col trebuie să fie egală cu suma rândurilor 8710–8860 col.@col. Valoarea rândului 8700: @v8700, suma calculată: @sum',
                     {
                         '@col': c,
                         '@v8700': r8700Rounded.toFixed(1),
@@ -1427,9 +1427,9 @@ function validate_CAP8_R8700(values) {
 
 
 //----------------------------------------------------------
-// CAP VIII FILIAL вЂ“ Legume de cГўmp
-// Pentru fiecare filialДѓ N:
-// RГўnd.8700 (col.1вЂ“4) = suma rГўndurilor 8710вЂ“8860 (pe fiecare coloanДѓ)
+// CAP VIII FILIAL – Legume de câmp
+// Pentru fiecare filială N:
+// Rând.8700 (col.1–4) = suma rândurilor 8710–8860 (pe fiecare coloană)
 function validate_CAP8_R8700_F(values) {
     var rows = [
         8710, 8720, 8730, 8740,
@@ -1451,7 +1451,7 @@ function validate_CAP8_R8700_F(values) {
         for (var c = 1; c <= 4; c++) {
             var col = "C" + c;
 
-            // 8700 FILIAL pentru filialДѓ j, col Cx
+            // 8700 FILIAL pentru filială j, col Cx
             var arr8700 = values["CAP8_R8700_" + col + "_FILIAL"];
             var r8700 = (arr8700 && !isNaN(Number(arr8700[j])))
                 ? Number(arr8700[j])
@@ -1459,7 +1459,7 @@ function validate_CAP8_R8700_F(values) {
 
             var sum = 0;
 
-            // suma 8710вЂ“8860 pentru aceeaИ™i filialДѓ j, col Cx
+            // suma 8710–8860 pentru aceeași filială j, col Cx
             for (var i = 0; i < rows.length; i++) {
                 var row = rows[i];
                 var arr = values["CAP8_R" + row + "_" + col + "_FILIAL"];
@@ -1468,7 +1468,7 @@ function validate_CAP8_R8700_F(values) {
                 }
             }
 
-            // Rotunjim la 1 zecimalДѓ Г®nainte de comparaИ›ie
+            // Rotunjim la 1 zecimală înainte de comparație
             var r8700Rounded = round1(r8700);
             var sumRounded = round1(sum);
 
@@ -1478,7 +1478,7 @@ function validate_CAP8_R8700_F(values) {
                     index: j,
                     weight: 10,
                     msg: Drupal.t(
-                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP8-001-F. RГўnd.8700 col.@col (filiale) trebuie sДѓ fie egalДѓ cu suma rГўndurilor 8710вЂ“8860 col.@col. Valoarea rГўndului 8700: @v8700, suma calculatДѓ: @sum',
+                        'Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP8-001-F. Rând.8700 col.@col (filiale) trebuie să fie egală cu suma rândurilor 8710–8860 col.@col. Valoarea rândului 8700: @v8700, suma calculată: @sum',
                         {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@col': c,
@@ -1521,7 +1521,7 @@ function validate_CAP1_R5100_C1_F(values) {
                 'fieldName': 'CAP1_R5100_' + col1 + '_FILIAL',
                 'index': j,
                 'weight': 19,
-                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-078-F. Valoarea CAP1 RГўnd.5100 col.1 trebuie sДѓ fie в‰Ґ CAP1 RГўnd.2000 col.1 - CAP1 RГўnd.2100 col.1. Valoarea gДѓsitДѓ: ' + CAP1_R5100_F + ', valoarea minimДѓ aИ™teptatДѓ: ' + calculatedDifference_F, {
+                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-078-F. Valoarea CAP1 Rând.5100 col.1 trebuie să fie ≥ CAP1 Rând.2000 col.1 - CAP1 Rând.2100 col.1. Valoarea găsită: ' + CAP1_R5100_F + ', valoarea minimă așteptată: ' + calculatedDifference_F, {
                     '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                 })
             });
@@ -1544,7 +1544,7 @@ function validate_CAP1_R5100_C1(values) {
         webform.errors.push({
             'fieldName': 'CAP1_R5100_' + col1,
             'weight': 19,
-            'msg': Drupal.t('Cod eroare: 45-078. Valoarea CAP1 RГўnd.5100 col.1 trebuie sДѓ fie в‰Ґ CAP1 RГўnd.2000 col.1 - CAP1 RГўnd.2100 col.1. Valoarea gДѓsitДѓ: ' + CAP1_R5100 + ', valoarea minimДѓ aИ™teptatДѓ: ' + calculatedDifference)
+            'msg': Drupal.t('Cod eroare: 45-078. Valoarea CAP1 Rând.5100 col.1 trebuie să fie ≥ CAP1 Rând.2000 col.1 - CAP1 Rând.2100 col.1. Valoarea găsită: ' + CAP1_R5100 + ', valoarea minimă așteptată: ' + calculatedDifference)
         });
     }
 }
@@ -1571,7 +1571,7 @@ function validate_CAP1_R5000_C1(values) {
         webform.errors.push({
             'fieldName': 'CAP1_R5000_' + col1,
             'weight': 19,
-            'msg': Drupal.t('Cod eroare: 45-014. Valoarea CAP.1 RГўnd.5000 col.1 trebuie sДѓ fie mai micДѓ  cu suma valorilor: CAP1 RГўnd.5100 col.1, CAP2 RГўnd.7100 col.1, CAP2 RГўnd.7200 col.1, CAP2 RГўnd.7300 col.1, CAP2 RГўnd.7400 col.1 И™i CAP2 RГўnd.7500 col.1. Valoarea gДѓsitДѓ: ' + CAP1_R5000 + ', suma calculatДѓ: ' + calculatedSum)
+            'msg': Drupal.t('Cod eroare: 45-014. Valoarea CAP.1 Rând.5000 col.1 trebuie să fie mai mică  cu suma valorilor: CAP1 Rând.5100 col.1, CAP2 Rând.7100 col.1, CAP2 Rând.7200 col.1, CAP2 Rând.7300 col.1, CAP2 Rând.7400 col.1 și CAP2 Rând.7500 col.1. Valoarea găsită: ' + CAP1_R5000 + ', suma calculată: ' + calculatedSum)
         });
     }
 }
@@ -1613,7 +1613,7 @@ function validate_CAP1_R5000_C1_F(values) {
                 'fieldName': 'CAP1_R5000_' + col1 + '_FILIAL',
                 'index': j,
                 'weight': 19,
-                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-014-F. Valoarea CAP.1 RГўnd.5000 col.1 trebuie sДѓ fie egalДѓ cu suma valorilor: CAP1 RГўnd.5100 col.1, CAP2 RГўnd.7100 col.1, CAP2 RГўnd.7200 col.1, CAP2 RГўnd.7300 col.1, CAP2 RГўnd.7400 col.1 И™i CAP2 RГўnd.7500 col.1. Valoarea gДѓsitДѓ: ' + CAP1_R5000_F + ', suma calculatДѓ: ' + calculatedSum_F, {
+                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-014-F. Valoarea CAP.1 Rând.5000 col.1 trebuie să fie egală cu suma valorilor: CAP1 Rând.5100 col.1, CAP2 Rând.7100 col.1, CAP2 Rând.7200 col.1, CAP2 Rând.7300 col.1, CAP2 Rând.7400 col.1 și CAP2 Rând.7500 col.1. Valoarea găsită: ' + CAP1_R5000_F + ', suma calculată: ' + calculatedSum_F, {
                     '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                 })
             });
@@ -1638,7 +1638,7 @@ function validate_1800_C3(values) {
         webform.errors.push({
             'fieldName': 'CAP1_R1800_' + col3,
             'weight': 19,
-            'msg': Drupal.t('Cod eroare: CAP1-001. RГўnd.1800 col.3 trebuie sДѓ fie egal cu suma RГўnd.1620 col.3 + RГўnd.6100 col.2. Valoarea rГўndului 1800: ' + col_1800 + ', suma calculatДѓ: ' + (col_1620 + col_6100))
+            'msg': Drupal.t('Cod eroare: CAP1-001. Rând.1800 col.3 trebuie să fie egal cu suma Rând.1620 col.3 + Rând.6100 col.2. Valoarea rândului 1800: ' + col_1800 + ', suma calculată: ' + (col_1620 + col_6100))
         });
     }
 }
@@ -1665,7 +1665,7 @@ function validate_1800_C3_F(values) {
                 'fieldName': 'CAP1_R1800_' + col3 + '_FILIAL',
                 'index': j,
                 'weight': 19,
-                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP1-001-F. RГўnd.1800 col.3 trebuie sДѓ fie egal cu suma RГўnd.1620 col.3 + RГўnd.6100 col.2. Valoarea rГўndului 1800: ' + col_1800_F + ', suma calculatДѓ: ' + (col_1620_F + col_6100_F), {
+                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP1-001-F. Rând.1800 col.3 trebuie să fie egal cu suma Rând.1620 col.3 + Rând.6100 col.2. Valoarea rândului 1800: ' + col_1800_F + ', suma calculată: ' + (col_1620_F + col_6100_F), {
                     '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                 })
             });
@@ -1689,7 +1689,7 @@ function validate_CUATM_FILIAL(values) {
                 'fieldName': 'CAP_CUATM_FILIAL',
                 'index': j,
                 'weight': 20,
-                'msg': Drupal.t('Raion: @CAP_NUM_FILIAL - Cod eroare: 45-020.  - DacДѓ existДѓ Nr. [@CAP_NUM_FILIAL], atunci trebuie sДѓ existe И™i cod CUATM.', {
+                'msg': Drupal.t('Raion: @CAP_NUM_FILIAL - Cod eroare: 45-020.  - Dacă există Nr. [@CAP_NUM_FILIAL], atunci trebuie să existe și cod CUATM.', {
                     '@CAP_NUM_FILIAL': CAP_NUM_FILIAL,
                     '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                 })
@@ -1703,7 +1703,7 @@ function validate_CUATM_FILIAL(values) {
                     'fieldName': 'CAP_CUATM_FILIAL',
                     'index': j,
                     'weight': 10,
-                    'msg': Drupal.t('Codul CUATM: @CAP_CUATM_FILIAL este duplicat. Fiecare cod CUATM trebuie sДѓ fie unic.', {
+                    'msg': Drupal.t('Codul CUATM: @CAP_CUATM_FILIAL este duplicat. Fiecare cod CUATM trebuie să fie unic.', {
                         '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                     })
                 });
@@ -1725,7 +1725,7 @@ function validate45_013(values) {
         webform.errors.push({
             'fieldName': 'CAP3_R7740_' + col,
             'weight': 19,
-            'msg': Drupal.t('Cod eroare: 45-013. RГўnd.7740 col.1 trebuie sДѓ fie в‰Ґ RГўnd.7741 col.1. Valoarea rГўndului 7740: ' + col_7740 + ', valoarea rГўndului 7741: ' + col_7741)
+            'msg': Drupal.t('Cod eroare: 45-013. Rând.7740 col.1 trebuie să fie ≥ Rând.7741 col.1. Valoarea rândului 7740: ' + col_7740 + ', valoarea rândului 7741: ' + col_7741)
         });
     }
 }
@@ -1746,7 +1746,7 @@ function validate45_013_F(values) {
                 'fieldName': 'CAP3_R7740_' + col + '_FILIAL',
                 'index': j,
                 'weight': 19,
-                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-013-F. RГўnd.7740 col.1 trebuie sДѓ fie в‰Ґ RГўnd.7741 col.1. Valoarea rГўndului 7740: ' + col_7740_F + ', valoarea rГўndului 7741: ' + col_7741_F, {
+                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-013-F. Rând.7740 col.1 trebuie să fie ≥ Rând.7741 col.1. Valoarea rândului 7740: ' + col_7740_F + ', valoarea rândului 7741: ' + col_7741_F, {
                     '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                 })
             });
@@ -1755,7 +1755,7 @@ function validate45_013_F(values) {
 }
 
 //-----------------------------------------------------------
-// Validation function for CAP3: row 7640 col.1 в‰Ґ row 7641 col.1
+// Validation function for CAP3: row 7640 col.1 ≥ row 7641 col.1
 function validate45_012(values) {
     var col = "C1";
     var col_7640 = !isNaN(Number(values["CAP3_R7640_" + col])) ? Number(values["CAP3_R7640_" + col]) : 0;
@@ -1765,12 +1765,12 @@ function validate45_012(values) {
         webform.errors.push({
             'fieldName': 'CAP3_R7640_' + col,
             'weight': 19,
-            'msg': Drupal.t('Cod eroare: 45-012. RГўnd.7640 col.1 trebuie sДѓ fie в‰Ґ RГўnd.7641 col.1. Valoarea rГўndului 7640: ' + col_7640 + ', valoarea rГўndului 7641: ' + col_7641)
+            'msg': Drupal.t('Cod eroare: 45-012. Rând.7640 col.1 trebuie să fie ≥ Rând.7641 col.1. Valoarea rândului 7640: ' + col_7640 + ', valoarea rândului 7641: ' + col_7641)
         });
     }
 }
 
-// Validation function for CAP3 FILIAL: row 7640 col.1 в‰Ґ row 7641 col.1
+// Validation function for CAP3 FILIAL: row 7640 col.1 ≥ row 7641 col.1
 function validate45_012_F(values) {
     var col = "C1";
     for (var j = 0; j < values.CAP_NUM_FILIAL.length; j++) {
@@ -1787,7 +1787,7 @@ function validate45_012_F(values) {
                 'fieldName': 'CAP3_R7640_' + col + '_FILIAL',
                 'index': j,
                 'weight': 19,
-                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-012-F. RГўnd.7640 col.1 trebuie sДѓ fie в‰Ґ RГўnd.7641 col.1. Valoarea rГўndului 7640: ' + col_7640_F + ', valoarea rГўndului 7641: ' + col_7641_F, {
+                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-012-F. Rând.7640 col.1 trebuie să fie ≥ Rând.7641 col.1. Valoarea rândului 7640: ' + col_7640_F + ', valoarea rândului 7641: ' + col_7641_F, {
                     '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                 })
             });
@@ -1797,7 +1797,7 @@ function validate45_012_F(values) {
 
 //----------------------------------------------------------
 
-// Validation function for CAP2: if col.2 = 0, then col.4 = 0; if col.2 в‰  0, then col.4 в‰  0 for all rows in CAP2
+// Validation function for CAP2: if col.2 = 0, then col.4 = 0; if col.2 ≠ 0, then col.4 ≠ 0 for all rows in CAP2
 function validate45_011(values) {
     var rows = [7100, 7110, 7120, 7130, 7140, 7200, 7210, 7220, 7230, 7240, 7250, 7260,
         7300, 7310, 7320, 7330, 7400, 7410, 7420, 7430, 7440, 7450, 7460, 7470,
@@ -1810,7 +1810,7 @@ function validate45_011(values) {
             webform.errors.push({
                 'fieldName': 'CAP2_R' + row + '_C2',
                 'weight': 19,
-                'msg': Drupal.t('Cod eroare: CAP2-001. DacДѓ col.2 = 0, atunci col.4 = 0. RГўnd: ' + row + ', col.2: ' + col2 + ', col.4: ' + col4)
+                'msg': Drupal.t('Cod eroare: CAP2-001. Dacă col.2 = 0, atunci col.4 = 0. Rând: ' + row + ', col.2: ' + col2 + ', col.4: ' + col4)
             });
         }
         // else
@@ -1818,14 +1818,14 @@ function validate45_011(values) {
         //     webform.errors.push({
         //         'fieldName': 'CAP2_R' + row + '_C4',
         //         'weight': 19,
-        //         'msg': Drupal.t('Cod eroare: 45-011. DacДѓ col.2 в‰  0, atunci col.4 в‰  0. RГўnd: ' + row + ', col.2: ' + col2 + ', col.4: ' + col4)
+        //         'msg': Drupal.t('Cod eroare: 45-011. Dacă col.2 ≠ 0, atunci col.4 ≠ 0. Rând: ' + row + ', col.2: ' + col2 + ', col.4: ' + col4)
         //     });
         // }
     }
 }
 
 
-// Validation function for CAP2 FILIAL: if col.2 = 0, then col.4 = 0; if col.2 в‰  0, then col.4 в‰  0 for all rows in CAP2
+// Validation function for CAP2 FILIAL: if col.2 = 0, then col.4 = 0; if col.2 ≠ 0, then col.4 ≠ 0 for all rows in CAP2
 function validate45_011_F(values) {
     var rows = [7100, 7110, 7120, 7130, 7140, 7200, 7210, 7220, 7230, 7240, 7250, 7260,
         7300, 7310, 7320, 7330, 7400, 7410, 7420, 7430, 7440, 7450, 7460, 7470,
@@ -1846,7 +1846,7 @@ function validate45_011_F(values) {
                     'fieldName': 'CAP2_R' + row + '_C2_FILIAL',
                     'index': j,
                     'weight': 19,
-                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP2-001-F. DacДѓ col.2 = 0, atunci col.4 = 0. RГўnd: ' + row + ', col.2: ' + col2_F + ', col.4: ' + col4_F, {
+                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: CAP2-001-F. Dacă col.2 = 0, atunci col.4 = 0. Rând: ' + row + ', col.2: ' + col2_F + ', col.4: ' + col4_F, {
                         '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                     })
                 });
@@ -1857,7 +1857,7 @@ function validate45_011_F(values) {
             //         'fieldName': 'CAP2_R' + row + '_C4_FILIAL',
             //         'index': j,
             //         'weight': 19,
-            //         'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-011-F. DacДѓ col.2 в‰  0, atunci col.4 в‰  0. RГўnd: ' + row + ', col.2: ' + col2_F + ', col.4: ' + col4_F, {
+            //         'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-011-F. Dacă col.2 ≠ 0, atunci col.4 ≠ 0. Rând: ' + row + ', col.2: ' + col2_F + ', col.4: ' + col4_F, {
             //             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
             //         })
             //     });
@@ -1868,7 +1868,7 @@ function validate45_011_F(values) {
 
 //-----------------------------------------------------------
 
-// Validation function for CAP1: row 5000 col.1 в‰Ґ row 5100 col.1
+// Validation function for CAP1: row 5000 col.1 ≥ row 5100 col.1
 function validate45_010(values) {
     var col = "C1";
     var col_5000 = !isNaN(Number(values["CAP1_R5000_" + col])) ? Number(values["CAP1_R5000_" + col]) : 0;
@@ -1878,12 +1878,12 @@ function validate45_010(values) {
         webform.errors.push({
             'fieldName': 'CAP1_R5000_' + col,
             'weight': 6,
-            'msg': Drupal.t('Cod eroare: 45-010. RГўnd.5000 col.1 trebuie sДѓ fie в‰Ґ RГўnd.5100 col.1. Valoarea rГўndului 5000: ' + col_5000 + ', valoarea rГўndului 5100: ' + col_5100)
+            'msg': Drupal.t('Cod eroare: 45-010. Rând.5000 col.1 trebuie să fie ≥ Rând.5100 col.1. Valoarea rândului 5000: ' + col_5000 + ', valoarea rândului 5100: ' + col_5100)
         });
     }
 }
 
-// Validation function for CAP1 FILIAL: row 5000 col.1 в‰Ґ row 5100 col.1
+// Validation function for CAP1 FILIAL: row 5000 col.1 ≥ row 5100 col.1
 function validate45_010_F(values) {
     var col = "C1";
     for (var j = 0; j < values.CAP_NUM_FILIAL.length; j++) {
@@ -1900,7 +1900,7 @@ function validate45_010_F(values) {
                 'fieldName': 'CAP1_R5000_' + col + '_FILIAL',
                 'index': j,
                 'weight': 6,
-                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-010-F. RГўnd.5000 col.1 trebuie sДѓ fie в‰Ґ RГўnd.5100 col.1. Valoarea rГўndului 5000: ' + col_5000_F + ', valoarea rГўndului 5100: ' + col_5100_F, {
+                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-010-F. Rând.5000 col.1 trebuie să fie ≥ Rând.5100 col.1. Valoarea rândului 5000: ' + col_5000_F + ', valoarea rândului 5100: ' + col_5100_F, {
                     '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                 })
             });
@@ -1909,7 +1909,7 @@ function validate45_010_F(values) {
 }
 
 //-----------------------------------------------------------
-// Validation function for CAP1: row 1950 col.1 в‰Ґ sum of rows 1951, 1952, and 1953 col.2
+// Validation function for CAP1: row 1950 col.1 ≥ sum of rows 1951, 1952, and 1953 col.2
 function validate45_009(values) {
     var col1 = "C1";
     var col2 = "C2";
@@ -1925,12 +1925,12 @@ function validate45_009(values) {
         webform.errors.push({
             'fieldName': 'CAP1_R1950_' + col1,
             'weight': 6,
-            'msg': Drupal.t('Cod eroare: 45-009. RГўnd.1950 col.1 trebuie sДѓ fie в‰Ґ suma rГўndurilor 1951+1952+1953 col.2. Valoarea rГўndului 1950 col.1: ' + col_1950 + ', suma calculatДѓ: ' + col_sum)
+            'msg': Drupal.t('Cod eroare: 45-009. Rând.1950 col.1 trebuie să fie ≥ suma rândurilor 1951+1952+1953 col.2. Valoarea rândului 1950 col.1: ' + col_1950 + ', suma calculată: ' + col_sum)
         });
     }
 }
 
-// Validation function for CAP1 FILIAL: row 1950 col.1 в‰Ґ sum of rows 1951, 1952, and 1953 col.2
+// Validation function for CAP1 FILIAL: row 1950 col.1 ≥ sum of rows 1951, 1952, and 1953 col.2
 function validate45_009_F(values) {
     var col1 = "C1";
     var col2 = "C2";
@@ -1953,7 +1953,7 @@ function validate45_009_F(values) {
                 'fieldName': 'CAP1_R1950_' + col1 + '_FILIAL',
                 'index': j,
                 'weight': 6,
-                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-009-F. RГўnd.1950 col.1 trebuie sДѓ fie в‰Ґ suma rГўndurilor 1951+1952+1953 col.2. Valoarea rГўndului 1950 col.1: ' + col_1950_F + ', suma calculatДѓ: ' + col_sum_F, {
+                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-009-F. Rând.1950 col.1 trebuie să fie ≥ suma rândurilor 1951+1952+1953 col.2. Valoarea rândului 1950 col.1: ' + col_1950_F + ', suma calculată: ' + col_sum_F, {
                     '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                 })
             });
@@ -1963,7 +1963,7 @@ function validate45_009_F(values) {
 
 //------------------------------------------------------
 
-// Validation function for CAP1: row 1490 col.2 в‰Ґ sum of rows 1491 and 1492 col.2
+// Validation function for CAP1: row 1490 col.2 ≥ sum of rows 1491 and 1492 col.2
 function validate45_008(values) {
     var col = "C2";
     var col_1490 = !isNaN(Number(values["CAP1_R1490_" + col])) ? Number(values["CAP1_R1490_" + col]) : 0;
@@ -1978,12 +1978,12 @@ function validate45_008(values) {
         webform.errors.push({
             'fieldName': 'CAP1_R1490_' + col,
             'weight': 6,
-            'msg': Drupal.t('Cod eroare: 45-008. RГўnd.1490 col.2 trebuie sДѓ fie в‰Ґ suma rГўndurilor 1491+1492 col.2. Valoarea rГўndului 1490: ' + col_1490 + ', suma calculatДѓ: ' + col_sum)
+            'msg': Drupal.t('Cod eroare: 45-008. Rând.1490 col.2 trebuie să fie ≥ suma rândurilor 1491+1492 col.2. Valoarea rândului 1490: ' + col_1490 + ', suma calculată: ' + col_sum)
         });
     }
 }
 
-// Validation function for CAP1 FILIAL: row 1490 col.2 в‰Ґ sum of rows 1491 and 1492 col.2
+// Validation function for CAP1 FILIAL: row 1490 col.2 ≥ sum of rows 1491 and 1492 col.2
 function validate45_008_F(values) {
     var col = "C2";
     for (var j = 0; j < values.CAP_NUM_FILIAL.length; j++) {
@@ -2005,7 +2005,7 @@ function validate45_008_F(values) {
                 'fieldName': 'CAP1_R1490_' + col + '_FILIAL',
                 'index': j,
                 'weight': 6,
-                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-008-F. RГўnd.1490 col.2 trebuie sДѓ fie в‰Ґ suma rГўndurilor 1491+1492 col.2. Valoarea rГўndului 1490: ' + col_1490_F + ', suma calculatДѓ: ' + col_sum_F, {
+                'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-008-F. Rând.1490 col.2 trebuie să fie ≥ suma rândurilor 1491+1492 col.2. Valoarea rândului 1490: ' + col_1490_F + ', suma calculată: ' + col_sum_F, {
                     '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                 })
             });
@@ -2014,7 +2014,7 @@ function validate45_008_F(values) {
 }
 
 //------------------------------------------------------
-// Validation function for CAP1: row 1430 columns 1-4 в‰Ґ row 1431 columns 1-4
+// Validation function for CAP1: row 1430 columns 1-4 ≥ row 1431 columns 1-4
 function validate45_007(values) {
     var colNames = ["C1", "C2", "C3", "C4"];
     for (var col of colNames) {
@@ -2025,13 +2025,13 @@ function validate45_007(values) {
             webform.errors.push({
                 'fieldName': 'CAP1_R1430_' + col,
                 'weight': 6,
-                'msg': Drupal.t('Cod eroare: 45-007. RГўnd.1430 col. ' + col + ' в‰Ґ RГўnd.1431 col. ' + col + '. Valoarea rГўndului 1430: ' + col_1430 + ', valoarea rГўndului 1431: ' + col_1431)
+                'msg': Drupal.t('Cod eroare: 45-007. Rând.1430 col. ' + col + ' ≥ Rând.1431 col. ' + col + '. Valoarea rândului 1430: ' + col_1430 + ', valoarea rândului 1431: ' + col_1431)
             });
         }
     }
 }
 
-// Validation function for CAP1 FILIAL: row 1430 columns 1-4 в‰Ґ row 1431 columns 1-4
+// Validation function for CAP1 FILIAL: row 1430 columns 1-4 ≥ row 1431 columns 1-4
 function validate45_007_F(values) {
     var colNames = ["C1", "C2", "C3", "C4"];
     for (var j = 0; j < values.CAP_NUM_FILIAL.length; j++) {
@@ -2050,7 +2050,7 @@ function validate45_007_F(values) {
                     'fieldName': 'CAP1_R1430_' + col + '_FILIAL',
                     'index': j,
                     'weight': 6,
-                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-007-F. RГўnd.1430 col. ' + col + ' в‰Ґ RГўnd.1431 col. ' + col + '. Valoarea rГўndului 1430: ' + col_1430_F + ', valoarea rГўndului 1431: ' + col_1431_F, {
+                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-007-F. Rând.1430 col. ' + col + ' ≥ Rând.1431 col. ' + col + '. Valoarea rândului 1430: ' + col_1430_F + ', valoarea rândului 1431: ' + col_1431_F, {
                         '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                     })
                 });
@@ -2060,7 +2060,7 @@ function validate45_007_F(values) {
 }
 
 
-// Validation function for CAP1: row 1240 columns 1-5 в‰Ґ row 1241 columns 1-5
+// Validation function for CAP1: row 1240 columns 1-5 ≥ row 1241 columns 1-5
 function validate45_006(values) {
     var colNames = ["C1", "C2", "C3", "C4", "C5"];
     for (var col of colNames) {
@@ -2071,13 +2071,13 @@ function validate45_006(values) {
             webform.errors.push({
                 'fieldName': 'CAP1_R1240_' + col,
                 'weight': 6,
-                'msg': Drupal.t('Cod eroare: 45-006. RГўnd.1240 col. ' + col + ' в‰Ґ RГўnd.1241 col. ' + col + '. Valoarea rГўndului 1240: ' + col_1240 + ', valoarea rГўndului 1241: ' + col_1241)
+                'msg': Drupal.t('Cod eroare: 45-006. Rând.1240 col. ' + col + ' ≥ Rând.1241 col. ' + col + '. Valoarea rândului 1240: ' + col_1240 + ', valoarea rândului 1241: ' + col_1241)
             });
         }
     }
 }
 
-// Validation function for CAP1 FILIAL: row 1240 columns 1-5 в‰Ґ row 1241 columns 1-5
+// Validation function for CAP1 FILIAL: row 1240 columns 1-5 ≥ row 1241 columns 1-5
 function validate45_006_F(values) {
     var colNames = ["C1", "C2", "C3", "C4", "C5"];
     for (var j = 0; j < values.CAP_NUM_FILIAL.length; j++) {
@@ -2096,7 +2096,7 @@ function validate45_006_F(values) {
                     'fieldName': 'CAP1_R1240_' + col + '_FILIAL',
                     'index': j,
                     'weight': 6,
-                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-006-F. RГўnd.1240 col. ' + col + ' в‰Ґ RГўnd.1241 col. ' + col + '. Valoarea rГўndului 1240: ' + col_1240_F + ', valoarea rГўndului 1241: ' + col_1241_F, {
+                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-006-F. Rând.1240 col. ' + col + ' ≥ Rând.1241 col. ' + col + '. Valoarea rândului 1240: ' + col_1240_F + ', valoarea rândului 1241: ' + col_1241_F, {
                         '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                     })
                 });
@@ -2124,7 +2124,7 @@ function validate45_005(values) {
             webform.errors.push({
                 'fieldName': 'CAP1_R1230_' + col,
                 'weight': 6,
-                'msg': Drupal.t('Cod eroare: 45-005. RГўnd.1230 col. ' + col + ' trebuie sДѓ fie egalДѓ cu suma rГўndurilor 1231-1236 col. ' + col + '. Valoarea rГўndului 1230: ' + col_1230 + ', suma calculatДѓ: ' + col_sum)
+                'msg': Drupal.t('Cod eroare: 45-005. Rând.1230 col. ' + col + ' trebuie să fie egală cu suma rândurilor 1231-1236 col. ' + col + '. Valoarea rândului 1230: ' + col_1230 + ', suma calculată: ' + col_sum)
             });
         }
     }
@@ -2154,7 +2154,7 @@ function validate45_005_F(values) {
                     'fieldName': 'CAP1_R1230_' + col + '_FILIAL',
                     'index': j,
                     'weight': 6,
-                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-005-F. RГўnd.1230 col. ' + col + ' trebuie sДѓ fie egalДѓ cu suma rГўndurilor 1231-1236 col. ' + col + '. Valoarea rГўndului 1230: ' + col_1230_F + ', suma calculatДѓ: ' + col_sum_F, {
+                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-005-F. Rând.1230 col. ' + col + ' trebuie să fie egală cu suma rândurilor 1231-1236 col. ' + col + '. Valoarea rândului 1230: ' + col_1230_F + ', suma calculată: ' + col_sum_F, {
                         '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                     })
                 });
@@ -2172,7 +2172,7 @@ function validatePhoneNumber(phone) {
         webform.errors.push({
             'fieldName': 'PHONE',
             'weight': 29,
-            'msg': concatMessage('A.09', '', Drupal.t('IntroduceИ›i doar un numДѓr de telefon format din 9 cifre'))
+            'msg': concatMessage('A.09', '', Drupal.t('Introduceți doar un număr de telefon format din 9 cifre'))
         });
     }
 
@@ -2181,7 +2181,7 @@ function validatePhoneNumber(phone) {
         webform.errors.push({
             'fieldName': 'PHONE',
             'weight': 30,
-            'msg': concatMessage('A.09', '', Drupal.t('Prima cifrДѓ a numДѓrului de telefon trebuie sДѓ fie 0'))
+            'msg': concatMessage('A.09', '', Drupal.t('Prima cifră a numărului de telefon trebuie să fie 0'))
         });
     }
 }
@@ -2269,7 +2269,7 @@ function validate45_003(values) {
                 webform.errors.push({
                     'fieldName': 'CAP2_R' + i + '_C1',
                     'weight': 6,
-                    'msg': Drupal.t('Cod eroare: 45-003. [@col1] - col.1  в‰Ґ  col.2 - [@col2]', { "@col1": col1, "@col2": col2 })
+                    'msg': Drupal.t('Cod eroare: 45-003. [@col1] - col.1  ≥  col.2 - [@col2]', { "@col1": col1, "@col2": col2 })
                 });
             }
 
@@ -2284,7 +2284,7 @@ function validate45_003(values) {
                 webform.errors.push({
                     'fieldName': 'CAP2_R' + i + '_C3',
                     'weight': 6,
-                    'msg': Drupal.t('Cod eroare: 45-003. [@col3] - col.3  в‰Ґ  col.4 - [@col4]', { "@col3": col3, "@col4": col4 })
+                    'msg': Drupal.t('Cod eroare: 45-003. [@col3] - col.3  ≥  col.4 - [@col4]', { "@col3": col3, "@col4": col4 })
                 });
             }
         }
@@ -2320,7 +2320,7 @@ function validate45_003_F(values) {
                         'fieldName': 'CAP2_R' + i + '_C1_FILIAL',
                         'index': j,
                         'weight': 6,
-                        'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-003-F. [@row_FILIAL] - col.1(@col1_F) в‰Ґ col.2(@col2_F)', {
+                        'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-003-F. [@row_FILIAL] - col.1(@col1_F) ≥ col.2(@col2_F)', {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@row_FILIAL': i,
                             '@col1_F': col1_F,
@@ -2348,7 +2348,7 @@ function validate45_003_F(values) {
                         'fieldName': 'CAP2_R' + i + '_C3_FILIAL',
                         'index': j,
                         'weight': 6,
-                        'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-003-F. [@row_FILIAL] - col.3(@col3_F) в‰Ґ col.4(@col4_F)', {
+                        'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-003-F. [@row_FILIAL] - col.3(@col3_F) ≥ col.4(@col4_F)', {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@row_FILIAL': i,
                             '@col3_F': col3_F,
@@ -2376,7 +2376,7 @@ function validate45_001(values) {
                 webform.errors.push({
                     'fieldName': 'CAP1_R' + i + '_C1',
                     'weight': 6,
-                    'msg': Drupal.t('Cod eroare: 45-001. [@col1] - col.1  в‰Ґ  col.2 - [@col2]', { "@col1": col1, "@col2": col2 })
+                    'msg': Drupal.t('Cod eroare: 45-001. [@col1] - col.1  ≥  col.2 - [@col2]', { "@col1": col1, "@col2": col2 })
                 });
             }
 
@@ -2388,7 +2388,7 @@ function validate45_001(values) {
                 webform.errors.push({
                     'fieldName': 'CAP1_R' + i + '_C3',
                     'weight': 6,
-                    'msg': Drupal.t('Cod eroare: 45-001. [@col3] - col.3  в‰Ґ  col.4 - [@col4]', { "@col3": col3, "@col4": col4 })
+                    'msg': Drupal.t('Cod eroare: 45-001. [@col3] - col.3  ≥  col.4 - [@col4]', { "@col3": col3, "@col4": col4 })
                 });
             }
         }
@@ -2411,7 +2411,7 @@ function validate45_002(values) {
                 webform.errors.push({
                     'fieldName': 'CAP1_R' + i + '_C1',
                     'weight': 6,
-                    'msg': Drupal.t('Cod eroare: 45-002. [@col1] - col.1  в‰Ґ  col.2 - [@col2]', { "@col1": col1, "@col2": col2 })
+                    'msg': Drupal.t('Cod eroare: 45-002. [@col1] - col.1  ≥  col.2 - [@col2]', { "@col1": col1, "@col2": col2 })
                 });
             }
 
@@ -2426,7 +2426,7 @@ function validate45_002(values) {
                 webform.errors.push({
                     'fieldName': 'CAP1_R' + i + '_C3',
                     'weight': 6,
-                    'msg': Drupal.t('Cod eroare: 45-002. [@col3] - col.3  в‰Ґ  col.4 - [@col4]', { "@col3": col3, "@col4": col4 })
+                    'msg': Drupal.t('Cod eroare: 45-002. [@col3] - col.3  ≥  col.4 - [@col4]', { "@col3": col3, "@col4": col4 })
                 });
             }
         }
@@ -2525,7 +2525,7 @@ function validate45_002_F(values) {
                         'fieldName': 'CAP1_R' + i + '_C1_FILIAL',
                         'index': j,
                         'weight': 6,
-                        'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-002-F. [@row_FILIAL] - col.1(@col1_F) в‰Ґ col.2(@col2_F)', {
+                        'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-002-F. [@row_FILIAL] - col.1(@col1_F) ≥ col.2(@col2_F)', {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@row_FILIAL': i,
                             '@col1_F': col1_F,
@@ -2553,7 +2553,7 @@ function validate45_002_F(values) {
                         'fieldName': 'CAP1_R' + i + '_C3_FILIAL',
                         'index': j,
                         'weight': 6,
-                        'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-002-F. [@row_FILIAL] - col.3(@col3_F) в‰Ґ col.4(@col4_F)', {
+                        'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-002-F. [@row_FILIAL] - col.3(@col3_F) ≥ col.4(@col4_F)', {
                             '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL,
                             '@row_FILIAL': i,
                             '@col3_F': col3_F,
@@ -2568,7 +2568,7 @@ function validate45_002_F(values) {
 //----------------------------------------------
 
 
-// Validation function for CAP1: row 1190 columns 1,2,3,4 в‰Ґ row 1191 columns 1,2,3,4
+// Validation function for CAP1: row 1190 columns 1,2,3,4 ≥ row 1191 columns 1,2,3,4
 function validate45_004(values) {
     var colNames = ["C1", "C2", "C3", "C4"];
     for (var col of colNames) {
@@ -2579,13 +2579,13 @@ function validate45_004(values) {
             webform.errors.push({
                 'fieldName': 'CAP1_R1190_' + col,
                 'weight': 6,
-                'msg': Drupal.t('Cod eroare: 45-004. RГўnd.1190 col. ' + col + ' в‰Ґ RГўnd.1191 col. ' + col + '. Valoarea rГўndului 1190: ' + col_1190 + ', valoarea rГўndului 1191: ' + col_1191)
+                'msg': Drupal.t('Cod eroare: 45-004. Rând.1190 col. ' + col + ' ≥ Rând.1191 col. ' + col + '. Valoarea rândului 1190: ' + col_1190 + ', valoarea rândului 1191: ' + col_1191)
             });
         }
     }
 }
 
-// Validation function for CAP1 FILIAL: row 1190 columns 1,2,3,4 в‰Ґ row 1191 columns 1,2,3,4
+// Validation function for CAP1 FILIAL: row 1190 columns 1,2,3,4 ≥ row 1191 columns 1,2,3,4
 function validate45_004_F(values) {
     var colNames = ["C1", "C2", "C3", "C4"];
     for (var j = 0; j < values.CAP_NUM_FILIAL.length; j++) {
@@ -2604,7 +2604,7 @@ function validate45_004_F(values) {
                     'fieldName': 'CAP1_R1190_' + col + '_FILIAL',
                     'index': j,
                     'weight': 6,
-                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-004-F. RГўnd.1190 col. ' + col + ' в‰Ґ RГўnd.1191 col. ' + col + '. Valoarea rГўndului 1190: ' + col_1190_F + ', valoarea rГўndului 1191: ' + col_1191_F, {
+                    'msg': Drupal.t('Raion: @CAP_CUATM_FILIAL - Cod eroare: 45-004-F. Rând.1190 col. ' + col + ' ≥ Rând.1191 col. ' + col + '. Valoarea rândului 1190: ' + col_1190_F + ', valoarea rândului 1191: ' + col_1191_F, {
                         '@CAP_CUATM_FILIAL': CAP_CUATM_FILIAL
                     })
                 });
